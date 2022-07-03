@@ -93,6 +93,14 @@ describe('DBAddUser usecase', () => {
     expect(promise).rejects.toThrow(new UserAlreadyExistsError())
   })
 
+  test('Should throws if CheckUserExistsRepository throws', () => {
+    const { sut, checkUserExistsRepositoryStub } = makeSut()
+    jest.spyOn(checkUserExistsRepositoryStub, 'exists').mockRejectedValue(new Error())
+    const user = makeFakerDTO()
+    const promise = sut.add(user)
+    expect(promise).rejects.toThrow(new Error())
+  })
+
   test('Should call Hasher with correct user password', async () => {
     const { sut, hasherStub } = makeSut()
     const hashSpy = jest.spyOn(hasherStub, 'hash')
