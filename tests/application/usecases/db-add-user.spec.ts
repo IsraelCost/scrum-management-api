@@ -108,4 +108,14 @@ describe('DBAddUser usecase', () => {
     await sut.add(user)
     expect(hashSpy).toHaveBeenCalledWith('any_password')
   })
+
+  test('Should throws if Hasher throws', () => {
+    const { sut, hasherStub } = makeSut()
+    jest.spyOn(hasherStub, 'hash').mockImplementationOnce(() => {
+      throw new Error()
+    })
+    const user = makeFakerDTO()
+    const promise = sut.add(user)
+    expect(promise).rejects.toThrow(new Error())
+  })
 })
