@@ -1,0 +1,12 @@
+{
+  "name": "scrum-management-api",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/IsraelCost/scrum-management-api.git",
+  "author": "IsraelCost <cmteisrael@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^18.0.0",
+    "typescript": "^4.7.4"
+  }
+}
