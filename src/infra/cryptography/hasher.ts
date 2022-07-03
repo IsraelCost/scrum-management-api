@@ -5,7 +5,7 @@ export class HasherAdapter implements Hasher {
   constructor (private readonly salt: number) {}
 
   hash (inputValue: string): string {
-    bcrypt.hashSync(inputValue, this.salt)
-    return ''
+    const hashedValue = bcrypt.hashSync(inputValue, this.salt)
+    return hashedValue
   }
 }
