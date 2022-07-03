@@ -12,8 +12,8 @@ export class DBAddUser {
   async add (input: DBAddUserDTO.Input): Promise<DBAddUserDTO.Output> {
     const userExists = await this.checkUserExistsRepository.exists(input.email)
     if (userExists) throw new UserAlreadyExistsError()
-    this.hasher.hash(input.password)
-    await this.addUserRepository.add(input)
+    const hashedPassword = this.hasher.hash(input.password)
+    await this.addUserRepository.add({ ...input, password: hashedPassword })
     return Promise.resolve(null)
   }
 }
