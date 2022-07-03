@@ -13,7 +13,7 @@ export class DBAddUser {
     const userExists = await this.checkUserExistsRepository.exists(input.email)
     if (userExists) throw new UserAlreadyExistsError()
     const hashedPassword = this.hasher.hash(input.password)
-    await this.addUserRepository.add({ ...input, password: hashedPassword })
-    return Promise.resolve(null)
+    const createdUser = await this.addUserRepository.add({ ...input, password: hashedPassword })
+    return createdUser
   }
 }
