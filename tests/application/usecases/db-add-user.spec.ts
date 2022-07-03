@@ -61,14 +61,6 @@ const makeFakerDTO = (): DBAddUserDTO.Input => {
 }
 
 describe('DBAddUser usecase', () => {
-  test('Should call addUserRepository method with user', async () => {
-    const { sut, addUserRepositoryStub } = makeSut()
-    const addSpy = jest.spyOn(addUserRepositoryStub, 'add')
-    const user = makeFakerDTO()
-    await sut.add(user)
-    expect(addSpy).toHaveBeenCalledWith(user)
-  })
-
   test('Should throws if addUserRepository throws', () => {
     const { sut, addUserRepositoryStub } = makeSut()
     jest.spyOn(addUserRepositoryStub, 'add').mockRejectedValue(new Error())
@@ -117,5 +109,13 @@ describe('DBAddUser usecase', () => {
     const user = makeFakerDTO()
     const promise = sut.add(user)
     expect(promise).rejects.toThrow(new Error())
+  })
+
+  test('Should call addUserRepository method with hashed password', async () => {
+    const { sut, addUserRepositoryStub } = makeSut()
+    const addSpy = jest.spyOn(addUserRepositoryStub, 'add')
+    const user = makeFakerDTO()
+    await sut.add(user)
+    expect(addSpy).toHaveBeenCalledWith({ ...user, password: 'hashed_value' })
   })
 })
