@@ -12,6 +12,7 @@
     "@typescript-eslint/no-misused-promises": 0,
     "@typescript-eslint/no-namespace": 0,
     "@typescript-eslint/no-floating-promises": 0,
-    "import/export": 0
+    "import/export": 0,
+    "no-trailing-spaces": 0
   }
 }
