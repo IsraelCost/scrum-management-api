@@ -1,4 +1,5 @@
 import { DBAddUserDTO } from '../dto'
+import { UserAlreadyExistsError } from '../errors'
 import { AddUserRepository, CheckUserExistsRepository } from '../protocols'
 
 export class DBAddUser {
@@ -8,8 +9,9 @@ export class DBAddUser {
   ) {}
 
   async add (input: DBAddUserDTO.Input): Promise<DBAddUserDTO.Output> {
-    await this.checkUserExistsRepository.exists(input.email)
+    const userExists = await this.checkUserExistsRepository.exists(input.email)
+    if (userExists) throw new UserAlreadyExistsError()
     await this.addUserRepository.add(input)
-    return null
+    return Promise.resolve(null)
   }
 }
