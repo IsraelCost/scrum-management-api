@@ -2,6 +2,7 @@ import { DBAddUser } from '@/application/usecases'
 import { DBAddUserDTO } from '@/application/dto'
 import { AddUserRepository, CheckUserExistsRepository } from '@/application/protocols'
 import { User } from '@/domain/models/user'
+import { UserAlreadyExistsError } from '@/application/errors'
 
 interface SutTypes {
   sut: DBAddUser
@@ -56,7 +57,7 @@ describe('DBAddUser usecase', () => {
     expect(addSpy).toHaveBeenCalledWith(user)
   })
 
-  test('Should throws if addUserRepository throws', async () => {
+  test('Should throws if addUserRepository throws', () => {
     const { sut, addUserRepositoryStub } = makeSut()
     jest.spyOn(addUserRepositoryStub, 'add').mockRejectedValue(new Error())
     const user = makeFakerDTO()
@@ -70,5 +71,13 @@ describe('DBAddUser usecase', () => {
     const user = makeFakerDTO()
     await sut.add(user)
     expect(existsSpy).toHaveBeenCalledWith('any_mail@mail.com')
+  })
+  
+  test('Should throw an UserAlreadyExistsError if CheckUserExistsRepository returns true', () => {
+    const { sut, checkUserExistsRepositoryStub } = makeSut()
+    jest.spyOn(checkUserExistsRepositoryStub, 'exists').mockResolvedValueOnce(true)
+    const user = makeFakerDTO()
+    const promise = sut.add(user)
+    expect(promise).rejects.toThrow(new UserAlreadyExistsError())
   })
 })
