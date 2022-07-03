@@ -6,6 +6,7 @@
   "author": "IsraelCost <cmteisrael@gmail.com>",
   "license": "MIT",
   "devDependencies": {
+    "@types/jest": "^28.1.4",
     "@types/node": "^18.0.0",
     "@typescript-eslint/eslint-plugin": "^5.30.3",
     "eslint": "^8.19.0",
