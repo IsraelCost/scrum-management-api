@@ -17,4 +17,16 @@ describe('HasherAdapter', () => {
     const hashedValue = sut.hash('any_value')
     expect(hashedValue).toBe('hashed_value')
   })
+
+  test('Should throws if bcrypt throws', () => {
+    const sut = new HasherAdapter(10)
+    jest.spyOn(bcrypt, 'hashSync').mockImplementationOnce(() => {
+      throw new Error()
+    })
+    try {
+      sut.hash('any_value')
+    } catch (error) {
+      expect(error).toEqual(new Error())
+    }
+  })
 })
