@@ -1,7 +1,13 @@
-import { DBAddUserDTO } from '../dto/db-add-user'
+import { DBAddUserDTO } from '../dto'
+import { AddUserRepository } from '../protocols'
 
 export class DBAddUser {
-  async add (input: DBAddUserDTO.Input): Promise<void> {
+  constructor (
+    private readonly addUserRepository: AddUserRepository
+  ) {}
 
+  async add (input: DBAddUserDTO.Input): Promise<DBAddUserDTO.Output> {
+    await this.addUserRepository.add(input)
+    return null
   }
 }
