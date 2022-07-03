@@ -43,4 +43,12 @@ describe('DBAddUser usecase', () => {
     await sut.add(user)
     expect(addSpy).toHaveBeenCalledWith(user)
   })
+
+  test('Should throws if addUserRepository throws', async () => {
+    const { sut, addUserRepositoryStub } = makeSut()
+    jest.spyOn(addUserRepositoryStub, 'add').mockRejectedValue(new Error())
+    const user = makeFakerDTO()
+    const promise = sut.add(user)
+    expect(promise).rejects.toThrow(new Error())
+  })
 })
