@@ -1,6 +1,6 @@
 import { DBAddUser } from '@/application/usecases'
 import { DBAddUserDTO } from '@/application/dto'
-import { AddUserRepository, CheckUserExistsRepository } from '@/application/protocols'
+import { AddUserRepository, CheckUserExistsRepository, Hasher } from '@/application/protocols'
 import { User } from '@/domain/models/user'
 import { UserAlreadyExistsError } from '@/application/errors'
 
@@ -8,6 +8,16 @@ interface SutTypes {
   sut: DBAddUser
   addUserRepositoryStub: AddUserRepository
   checkUserExistsRepositoryStub: CheckUserExistsRepository
+  hasherStub: Hasher
+}
+
+const makeHasherStub = (): Hasher => {
+  class HasherStub implements Hasher {
+    hash (value: string): string {
+      return 'hashed_value'
+    }
+  }
+  return new HasherStub()
 }
 
 const makeCheckUserExistsRepositoryStub = (): CheckUserExistsRepository => {
@@ -31,11 +41,13 @@ const makeAddUserRepositoryStub = (): AddUserRepository => {
 const makeSut = (): SutTypes => {
   const addUserRepositoryStub = makeAddUserRepositoryStub()
   const checkUserExistsRepositoryStub = makeCheckUserExistsRepositoryStub()
-  const sut = new DBAddUser(addUserRepositoryStub, checkUserExistsRepositoryStub)
+  const hasherStub = makeHasherStub()
+  const sut = new DBAddUser(addUserRepositoryStub, checkUserExistsRepositoryStub, hasherStub)
   return {
     sut,
     addUserRepositoryStub,
-    checkUserExistsRepositoryStub
+    checkUserExistsRepositoryStub,
+    hasherStub
   }
 }
 
@@ -79,5 +91,13 @@ describe('DBAddUser usecase', () => {
     const user = makeFakerDTO()
     const promise = sut.add(user)
     expect(promise).rejects.toThrow(new UserAlreadyExistsError())
+  })
+
+  test('Should call Hasher with correct user password', async () => {
+    const { sut, hasherStub } = makeSut()
+    const hashSpy = jest.spyOn(hasherStub, 'hash')
+    const user = makeFakerDTO()
+    await sut.add(user)
+    expect(hashSpy).toHaveBeenCalledWith('any_password')
   })
 })
