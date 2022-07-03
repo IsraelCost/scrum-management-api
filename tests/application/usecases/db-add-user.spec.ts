@@ -32,7 +32,7 @@ const makeCheckUserExistsRepositoryStub = (): CheckUserExistsRepository => {
 const makeAddUserRepositoryStub = (): AddUserRepository => {
   class AddUserRepositoryStub implements AddUserRepository {
     async add (input: DBAddUserDTO.Input): Promise<User> {
-      return Promise.resolve(null)
+      return Promise.resolve({ ...input, id: 'any_id' })
     }
   }
   return new AddUserRepositoryStub()
@@ -117,5 +117,12 @@ describe('DBAddUser usecase', () => {
     const user = makeFakerDTO()
     await sut.add(user)
     expect(addSpy).toHaveBeenCalledWith({ ...user, password: 'hashed_value' })
+  })
+
+  test('Should return user on success', async () => {
+    const { sut } = makeSut()
+    const user = makeFakerDTO()
+    const createdUser = await sut.add(user)
+    expect(createdUser).toEqual({ ...user, password: 'hashed_value', id: 'any_id' })
   })
 })
