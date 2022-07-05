@@ -1,8 +1,9 @@
 import { DBAddUser } from '@/application/usecases'
 import { DBAddUserDTO } from '@/application/dto'
-import { AddUserRepository, CheckUserExistsRepository, Hasher, UUIDGenerator } from '@/application/protocols'
+import { Hasher, UUIDGenerator } from '@/application/protocols'
 import { User } from '@/domain/models/user'
 import { CannotCreateError, UserAlreadyExistsError } from '@/application/errors'
+import { AddUserRepository, CheckUserExistsRepository } from '@/domain/repositories/user'
 
 interface SutTypes {
   sut: DBAddUser

@@ -1,7 +1,8 @@
 import { User } from '@/domain/models/user'
+import { AddUserRepository, CheckUserExistsRepository } from '@/domain/repositories/user'
 import { DBAddUserDTO } from '../dto'
 import { CannotCreateError, UserAlreadyExistsError } from '../errors'
-import { AddUserRepository, CheckUserExistsRepository, Hasher, UUIDGenerator } from '../protocols'
+import { Hasher, UUIDGenerator } from '../protocols'
 
 export class DBAddUser {
   constructor (
