@@ -15,8 +15,8 @@ export class DBAddUser {
     const userExists = await this.checkUserExistsRepository.exists(input.email)
     if (userExists) throw new UserAlreadyExistsError()
     const hashedPassword = this.hasher.hash(input.password)
-    this.uuidGenerator.generate()
-    const user = new User('any_id', input.name, input.email, hashedPassword, input.profilePictureUrl)
+    const userId = this.uuidGenerator.generate()
+    const user = new User(userId, input.name, input.email, hashedPassword, input.profilePictureUrl)
     const createdUser = await this.addUserRepository.add(user)
     if (!createdUser) throw new Error('Cannot create user')
     return {
