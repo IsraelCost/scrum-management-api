@@ -1,19 +1,21 @@
 import { User } from '@/domain/models/user'
 import { DBAddUserDTO } from '../dto'
 import { UserAlreadyExistsError } from '../errors'
-import { AddUserRepository, CheckUserExistsRepository, Hasher } from '../protocols'
+import { AddUserRepository, CheckUserExistsRepository, Hasher, UUIDGenerator } from '../protocols'
 
 export class DBAddUser {
   constructor (
     private readonly addUserRepository: AddUserRepository,
     private readonly checkUserExistsRepository: CheckUserExistsRepository,
-    private readonly hasher: Hasher
+    private readonly hasher: Hasher,
+    private readonly uuidGenerator: UUIDGenerator
   ) {}
 
   async add (input: DBAddUserDTO.Input): Promise<DBAddUserDTO.Output> {
     const userExists = await this.checkUserExistsRepository.exists(input.email)
     if (userExists) throw new UserAlreadyExistsError()
     const hashedPassword = this.hasher.hash(input.password)
+    this.uuidGenerator.generate()
     const user = new User('any_id', input.name, input.email, hashedPassword, input.profilePictureUrl)
     const createdUser = await this.addUserRepository.add(user)
     if (!createdUser) throw new Error('Cannot create user')
