@@ -2,7 +2,7 @@ import { DBAddUser } from '@/application/usecases'
 import { DBAddUserDTO } from '@/application/dto'
 import { AddUserRepository, CheckUserExistsRepository, Hasher, UUIDGenerator } from '@/application/protocols'
 import { User } from '@/domain/models/user'
-import { UserAlreadyExistsError } from '@/application/errors'
+import { CannotCreateError, UserAlreadyExistsError } from '@/application/errors'
 
 interface SutTypes {
   sut: DBAddUser
@@ -144,5 +144,13 @@ describe('DBAddUser usecase', () => {
     const user = makeFakerInputDTO()
     const createdUser = await sut.add(user)
     expect(createdUser).toEqual({ ...user, password: 'hashed_value', id: 'uuid' })
+  })
+
+  test('Should throws an CannotCreateError on repository fails', () => {
+    const { sut, addUserRepositoryStub } = makeSut()
+    jest.spyOn(addUserRepositoryStub, 'add').mockResolvedValue(null)
+    const user = makeFakerInputDTO()
+    const promise = sut.add(user)
+    expect(promise).rejects.toThrow(new CannotCreateError())
   })
 })
