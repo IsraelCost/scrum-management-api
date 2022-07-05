@@ -10,4 +10,11 @@ describe('UUIDGeneratorAdapter', () => {
     sut.generate()
     expect(v4Spy).toHaveBeenCalledTimes(1)
   })
+
+  test('Should returns uuid module returned value', () => {
+    const sut = new UUIDGeneratorAdapter()
+    jest.spyOn(uuid, 'v4').mockReturnValueOnce('uuid')
+    const generatedUUID = sut.generate()
+    expect(generatedUUID).toBe('uuid')
+  })
 })
