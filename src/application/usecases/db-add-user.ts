@@ -1,6 +1,6 @@
 import { User } from '@/domain/models/user'
 import { DBAddUserDTO } from '../dto'
-import { UserAlreadyExistsError } from '../errors'
+import { CannotCreateError, UserAlreadyExistsError } from '../errors'
 import { AddUserRepository, CheckUserExistsRepository, Hasher, UUIDGenerator } from '../protocols'
 
 export class DBAddUser {
@@ -18,7 +18,7 @@ export class DBAddUser {
     const userId = this.uuidGenerator.generate()
     const user = new User(userId, input.name, input.email, hashedPassword, input.profilePictureUrl)
     const createdUser = await this.addUserRepository.add(user)
-    if (!createdUser) throw new Error('Cannot create user')
+    if (!createdUser) throw new CannotCreateError()
     return {
       id: userId, 
       name: input.name, 
