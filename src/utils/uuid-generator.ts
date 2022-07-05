@@ -3,7 +3,7 @@ import { UUIDGenerator } from '@/application/protocols'
 
 export class UUIDGeneratorAdapter implements UUIDGenerator {
   generate (): string {
-    uuid.v4()
-    return ''
+    const generatedUUID = uuid.v4()
+    return generatedUUID
   }
 }
