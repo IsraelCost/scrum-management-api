@@ -1,6 +1,6 @@
 import { DBAddUser } from '@/application/usecases'
 import { DBAddUserDTO } from '@/application/dto'
-import { AddUserRepository, CheckUserExistsRepository, Hasher } from '@/application/protocols'
+import { AddUserRepository, CheckUserExistsRepository, Hasher, UUIDGenerator } from '@/application/protocols'
 import { User } from '@/domain/models/user'
 import { UserAlreadyExistsError } from '@/application/errors'
 
@@ -9,6 +9,16 @@ interface SutTypes {
   addUserRepositoryStub: AddUserRepository
   checkUserExistsRepositoryStub: CheckUserExistsRepository
   hasherStub: Hasher
+  uuidGeneratorStub: UUIDGenerator
+}
+
+const makeUuidGeneratorStub = (): UUIDGenerator => {
+  class UUIDGeneratorStub implements UUIDGenerator {
+    generate (): string {
+      return 'uuid'
+    }
+  }
+  return new UUIDGeneratorStub()
 }
 
 const makeHasherStub = (): Hasher => {
@@ -42,12 +52,14 @@ const makeSut = (): SutTypes => {
   const addUserRepositoryStub = makeAddUserRepositoryStub()
   const checkUserExistsRepositoryStub = makeCheckUserExistsRepositoryStub()
   const hasherStub = makeHasherStub()
-  const sut = new DBAddUser(addUserRepositoryStub, checkUserExistsRepositoryStub, hasherStub)
+  const uuidGeneratorStub = makeUuidGeneratorStub()
+  const sut = new DBAddUser(addUserRepositoryStub, checkUserExistsRepositoryStub, hasherStub, uuidGeneratorStub)
   return {
     sut,
     addUserRepositoryStub,
     checkUserExistsRepositoryStub,
-    hasherStub
+    hasherStub,
+    uuidGeneratorStub
   }
 }
 
@@ -109,6 +121,14 @@ describe('DBAddUser usecase', () => {
     const user = makeFakerInputDTO()
     const promise = sut.add(user)
     expect(promise).rejects.toThrow(new Error())
+  })
+
+  test('Should call uuid generator', async () => {
+    const { sut, uuidGeneratorStub } = makeSut()
+    const generateSpy = jest.spyOn(uuidGeneratorStub, 'generate')
+    const user = makeFakerInputDTO()
+    await sut.add(user)
+    expect(generateSpy).toHaveBeenCalledTimes(1)
   })
 
   test.skip('Should call addUserRepository method with hashed password', async () => {
