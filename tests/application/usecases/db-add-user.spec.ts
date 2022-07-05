@@ -143,6 +143,6 @@ describe('DBAddUser usecase', () => {
     const { sut } = makeSut()
     const user = makeFakerInputDTO()
     const createdUser = await sut.add(user)
-    expect(createdUser).toEqual({ ...user, password: 'hashed_value', id: 'any_id' })
+    expect(createdUser).toEqual({ ...user, password: 'hashed_value', id: 'uuid' })
   })
 })

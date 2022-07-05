@@ -20,7 +20,7 @@ export class DBAddUser {
     const createdUser = await this.addUserRepository.add(user)
     if (!createdUser) throw new Error('Cannot create user')
     return {
-      id: 'any_id', 
+      id: userId, 
       name: input.name, 
       email: input.email, 
       password: hashedPassword, 
