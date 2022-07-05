@@ -131,7 +131,7 @@ describe('DBAddUser usecase', () => {
     expect(generateSpy).toHaveBeenCalledTimes(1)
   })
 
-  test.skip('Should call addUserRepository method with hashed password', async () => {
+  test('Should call addUserRepository method with correct id and hashed password', async () => {
     const { sut, addUserRepositoryStub } = makeSut()
     const addSpy = jest.spyOn(addUserRepositoryStub, 'add')
     const user = makeFakerInputDTO()
