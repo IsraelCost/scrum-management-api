@@ -22,5 +22,8 @@ export class PostgreSQLConnection implements Connection {
 
   async query (sql: string): Promise<any> {}
   
-  async close (): Promise<void> {}
+  async close (): Promise<boolean> {
+    await this.db.end()
+    return true
+  }
 }
