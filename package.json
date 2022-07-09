@@ -9,6 +9,7 @@
     "@types/bcrypt": "^5.0.0",
     "@types/jest": "^28.1.4",
     "@types/node": "^18.0.0",
+    "@types/pg": "^8.6.5",
     "@types/uuid": "^8.3.4",
     "@typescript-eslint/eslint-plugin": "^5.30.3",
     "eslint": "^8.19.0",
@@ -28,12 +29,14 @@
     "test:verbose": "jest --passWithNoTests --runInBand",
     "test:unit": "npm test -- --watch -c jest-unit-config.js",
     "test:integration": "npm test -- --watch -c jest-integration-config.js",
+    "test:integration:verbose": "jest --passWithNoTests --noStackTrace --runInBand --no-cache --watch -c jest-integration-config.js",
     "test:staged": "npm test -- --findRelatedTests",
     "test:ci": "npm test -- --coverage",
     "prepare": "husky install"
   },
   "dependencies": {
     "bcrypt": "^5.0.1",
+    "pg": "^8.7.3",
     "uuid": "^8.3.2"
   }
 }
