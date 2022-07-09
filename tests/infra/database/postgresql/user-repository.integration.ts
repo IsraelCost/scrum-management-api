@@ -16,7 +16,7 @@ describe('UserPostgreSQLRepository', () => {
   const OLD_ENV = process.env
   let connection
 
-  beforeAll(() => {
+  beforeAll(async () => {
     process.env = {
       DB_USER: 'postgres',
       DB_HOST: 'localhost',
@@ -25,20 +25,43 @@ describe('UserPostgreSQLRepository', () => {
       DB_PORT: '5432'
     }
     connection = makeConnection()
-    connection.open()
+    await connection.open()
+    connection.query('delete from users')
   })
 
-  afterAll(async () => {
-    await connection.query('delete from users')
+  afterAll(() => {
     connection.close()
     process.env = OLD_ENV
   })
 
   describe('add user method', () => {
+    afterAll(async () => {
+      await connection.query('delete from users')
+    })
+
     test('Should add a new user in database', async () => {
       const sut = new UserPostgreSQLRepository(connection)
       const addedUser = await sut.add(makeFakerUser())
       expect(addedUser).toEqual(makeFakerUser())
+    })
+  })
+
+  describe('exists user method', () => {
+    afterAll(async () => {
+      await connection.query('delete from users')
+    })
+
+    test('Should return false without user with email', async () => {
+      const sut = new UserPostgreSQLRepository(connection)
+      const userAlreadyExists = await sut.exists('any_email')
+      expect(userAlreadyExists).toBe(false)
+    })
+
+    test('Should add a new user in database and check if it exists', async () => {
+      const sut = new UserPostgreSQLRepository(connection)
+      await sut.add(makeFakerUser())
+      const userAlreadyExists = await sut.exists('any_email')
+      expect(userAlreadyExists).toBe(true)
     })
   })
 })
