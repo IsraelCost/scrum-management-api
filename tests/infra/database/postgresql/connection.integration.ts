@@ -30,4 +30,19 @@ describe('PostgreSQLConnection', () => {
     const disconnected = await sut.close()
     expect(disconnected).toBeTruthy()
   })
+
+  test('Should return rows from query', async () => {
+    const sut = new PostgreSQLConnection()
+    const connected = await sut.open()
+    expect(connected).toBeTruthy()
+    const deleteSql = 'delete from users'
+    await sut.query(deleteSql)
+    const insertSql = "insert into users (id, name, email, password, profilePictureUrl) values ('any_id', 'any_name', 'any_mail', 'any_password', 'any_url')"
+    await sut.query(insertSql)
+    const selectSql = 'select * from users'
+    const result = await sut.query(selectSql)
+    expect(result).toEqual([{ id: 'any_id', name: 'any_name', email: 'any_mail', password: 'any_password', profilepictureurl: 'any_url' }])
+    const disconnected = await sut.close()
+    expect(disconnected).toBeTruthy()
+  })
 })
