@@ -1,9 +1,9 @@
 export class User {
   constructor (
-    private readonly id: string,
-    private readonly name: string,
-    private readonly email: string,
-    private readonly password: string,
-    private readonly profilePictureUrl: string
+    readonly id: string,
+    readonly name: string,
+    readonly email: string,
+    readonly password: string,
+    readonly profilePictureUrl: string
   ) {}
 }
