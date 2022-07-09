@@ -17,9 +17,17 @@ describe('PostgreSQLConnection', () => {
     process.env = OLD_ENV
   })
 
-  test('Should create client and connect to server', async () => {
+  test('Should connect to server', async () => {
     const sut = new PostgreSQLConnection()
     const connected = await sut.open()
     expect(connected).toBeTruthy()
+  })
+
+  test('Should disconnect to server', async () => {
+    const sut = new PostgreSQLConnection()
+    const connected = await sut.open()
+    expect(connected).toBeTruthy()
+    const disconnected = await sut.close()
+    expect(disconnected).toBeTruthy()
   })
 })
