@@ -22,7 +22,6 @@ export class PostgreSQLConnection implements Connection {
 
   async query (sql: string): Promise<any> {
     const result = await this.db.query(sql)
-    console.log(result)
     return result.rows
   }
   
