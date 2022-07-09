@@ -12,6 +12,8 @@ export class UserPostgreSQLRepository implements AddUserRepository, CheckUserExi
   }
 
   async exists (email: string): Promise<boolean> {
-    return Promise.resolve(null)
+    const SQL = `select * from users where email='${email}'`
+    const rows = await this.connection.query(SQL)
+    return rows.length > 0
   }
 }
