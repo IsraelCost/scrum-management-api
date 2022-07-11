@@ -2,6 +2,8 @@ import { SignUpController } from '@/presentation/controllers/sign-up'
 import { Http } from '@/presentation/protocols'
 import { Validation } from '@/validation/protocols/validation'
 import { ValidationError } from '@/validation/protocols/validation-error'
+import { RequiredFieldError } from '@/validation/errors'
+import { badRequest } from '@/presentation/helpers'
 
 interface SutTypes {
   sut: SignUpController
@@ -41,5 +43,14 @@ describe('SignUpController', () => {
     await sut.handle(makeSignUpRequest())
     expect(validateSpy).toHaveBeenCalledTimes(1)
     expect(validateSpy).toHaveBeenCalledWith({ email: 'any_email', password: 'any_password', profilePictureBase64: 'any_profile_picture_viewer' })
+  })
+
+  test('Should returns a badRequest helper if any validation returns length more than one', async () => {
+    const { sut, validationStub } = makeSut()
+    jest.spyOn(validationStub, 'validate').mockImplementationOnce(() => {
+      return [new RequiredFieldError('email')]
+    })
+    const result = await sut.handle(makeSignUpRequest())
+    expect(result).toEqual(badRequest([new RequiredFieldError('email')]))
   })
 })
