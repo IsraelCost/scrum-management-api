@@ -21,12 +21,6 @@ describe('RequiredFieldsValidation', () => {
     expect(errors[0].fieldName).toBe('name')
     expect(errors[0].message).toBe('field "name" is required')
   })
-  
-  test('Should enter an error if input is not provided', () => {
-    const sut = new RequiredFieldsValidation(['name'])
-    const errors = sut.validate(null)
-    expect(errors).toHaveLength(0)
-  })
 
   test('Should enter 0 length error array if not empty values provided', () => {
     const sut = new RequiredFieldsValidation(['name'])

@@ -7,10 +7,8 @@ export class RequiredFieldsValidation implements ConcreteValidation {
 
   validate (input: any): ValidationError[] {
     const errors: ValidationError[] = []
-    if (input) {
-      for (const field of this.fields) {
-        if (!input[field]) errors.push(new RequiredFieldError(field))
-      }
+    for (const field of this.fields) {
+      if (!input[field]) errors.push(new RequiredFieldError(field))
     }
     return errors
   }
