@@ -35,7 +35,7 @@ const makeSignUpRequest = (): Http.HttpRequest => {
 }
 
 describe('SignUpController', () => {
-  test('Should call validations with correct values', async () => {
+  test('Should calls validation with correct values', async () => {
     const { sut, validationStub } = makeSut()
     const validateSpy = jest.spyOn(validationStub, 'validate')
     await sut.handle(makeSignUpRequest())
