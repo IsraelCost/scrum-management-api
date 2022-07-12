@@ -1,10 +1,11 @@
 import { User } from '@/domain/models/user'
 import { AddUserRepository, CheckUserExistsRepository } from '@/domain/repositories/user'
+import { AddUserUsecase } from '@/domain/usecases'
 import { DBAddUserDTO } from '../dto'
 import { CannotCreateError, UserAlreadyExistsError } from '../errors'
 import { Hasher, UUIDGenerator } from '../protocols'
 
-export class DBAddUser {
+export class DBAddUser implements AddUserUsecase {
   constructor (
     private readonly addUserRepository: AddUserRepository,
     private readonly checkUserExistsRepository: CheckUserExistsRepository,
