@@ -33,4 +33,11 @@ describe('SavePicture', () => {
     expect(uploadSpy).toHaveBeenCalledTimes(1)
     expect(uploadSpy).toHaveBeenCalledWith('image_path', Buffer.from(''))
   })
+
+  test('Should return uploaded image location', async () => {
+    const { sut, imageUploaderStub } = makeSut()
+    jest.spyOn(imageUploaderStub, 'upload').mockResolvedValueOnce('any_location')
+    const imageLocation = await sut.save('image_path', Buffer.from(''))
+    expect(imageLocation).toBe('any_location')
+  })
 })
