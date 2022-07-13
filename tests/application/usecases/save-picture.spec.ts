@@ -40,4 +40,13 @@ describe('SavePicture', () => {
     const imageLocation = await sut.save('image_path', Buffer.from(''))
     expect(imageLocation).toBe('any_location')
   })
+
+  test('Should throws if uploader throws', () => {
+    const { sut, imageUploaderStub } = makeSut()
+    jest.spyOn(imageUploaderStub, 'upload').mockImplementationOnce(() => {
+      throw new Error()
+    })
+    const promise = sut.save('image_path', Buffer.from(''))
+    expect(promise).rejects.toThrow(new Error())
+  })
 })
