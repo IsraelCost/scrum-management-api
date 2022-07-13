@@ -8,8 +8,9 @@ export class SavePicture implements SavePictureUsecase {
   ) {}
 
   async save (path: string, buffer: Buffer): Promise<string> {
-    this.uuidGenerator.generate()
-    const imageLocation = await this.imageUploader.upload(path, buffer)
+    const uuid = this.uuidGenerator.generate()
+    const pathToUpload = `${path}/${uuid}`
+    const imageLocation = await this.imageUploader.upload(pathToUpload, buffer)
     return imageLocation
   }
 }
